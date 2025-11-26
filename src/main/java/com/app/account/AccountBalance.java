@@ -1,5 +1,6 @@
 package com.app.account;
 
+import com.app.transaction.Currency;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +16,6 @@ import java.math.BigDecimal;
 @Serdeable
 public class AccountBalance {
     private String accountNo;
+    private Currency baseCurrency;
     private BigDecimal balance;
 }
