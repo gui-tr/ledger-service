@@ -3,5 +3,6 @@ package com.app.transaction;
 public enum Type {
     DEPOSIT,
     WITHDRAWAL,
-    TRANSFER
+    TRANSFER_IN,
+    TRANSFER_OUT,
 }

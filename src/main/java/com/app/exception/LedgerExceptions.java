@@ -10,6 +10,12 @@ public class LedgerExceptions {
         }
     }
 
+    public static class NoAccountFoundException extends LedgerBaseException {
+        public NoAccountFoundException() {
+            super("No account found. Please create a new one.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     public static class InsufficientFundsException extends LedgerBaseException {
         public InsufficientFundsException(String accountNo) {
             super("Insufficient funds for account no: " + accountNo, HttpStatus.BAD_REQUEST);
@@ -19,7 +25,7 @@ public class LedgerExceptions {
     public static class PositiveBalanceException extends LedgerBaseException {
         public PositiveBalanceException(String accountNo) {
             super("Cannot delete positive balance for account no: " + accountNo +
-                    "\nPlease empty account first.", HttpStatus.BAD_REQUEST);
+                    " Please empty account first.", HttpStatus.BAD_REQUEST);
         }
     }
 
