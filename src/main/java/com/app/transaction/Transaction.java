@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Serdeable
 public class Transaction {
     private String id;
-    private String accountId;
+    private String accountNo;
     private Type type;
     private BigDecimal amount;
     private Currency currency;
