@@ -19,7 +19,7 @@ public class LedgerExceptions {
     public static class PositiveBalanceException extends LedgerBaseException {
         public PositiveBalanceException(String accountId) {
             super("Cannot delete positive balance for account id: " + accountId +
-                    "Please empty account first.", HttpStatus.BAD_REQUEST);
+                    "\nPlease empty account first.", HttpStatus.BAD_REQUEST);
         }
     }
 
