@@ -8,13 +8,14 @@ import com.app.transaction.FxRate;
 import com.app.transaction.TransactionRepository;
 import io.micronaut.runtime.http.scope.RequestScope;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.math.BigDecimal;
 
 import static com.app.ledger.LedgerUtil.generateAccountId;
 import static com.app.ledger.LedgerUtil.getBalance;
 
-@RequestScope
+@Singleton
 public class LedgerService {
 
     @Inject
