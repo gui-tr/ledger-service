@@ -4,6 +4,7 @@ import com.app.account.Account;
 import com.app.exception.LedgerBaseException;
 import com.app.ledger.LedgerService;
 import com.app.transaction.Currency;
+import com.app.transaction.Transaction;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -20,14 +21,16 @@ import static com.app.api.LedgerApi.BASE_URL;
 public class LedgerApi {
 
     static final String BASE_URL = "/ledger";
-    static final String ACCOUNT_PATH = "/account";
+    static final String ACCOUNT = "/{account}";
+    static final String BALANCE = "/balance";
+    static final String DEPOSIT = "/deposit";
+    static final String WITHDRAWAL = "/withdrawal";
 
     @Inject
     LedgerService ledgerService;
 
 
-    // ACCOUNT ENDPOINTS
-    @Post(ACCOUNT_PATH)
+    @Post()
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Open new account")
     public HttpResponse<ApiResponse<Account>> openNewAccount(@QueryValue Currency baseCcy) {
@@ -43,12 +46,12 @@ public class LedgerApi {
     }
 
 
-    @Delete(ACCOUNT_PATH)
+    @Delete(ACCOUNT)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Delete an account")
-    public HttpResponse<ApiResponse<Void>> deleteAccount(@QueryValue String accountNo) {
+    public HttpResponse<ApiResponse<Void>> deleteAccount(@PathVariable String account) {
 
-        ledgerService.deleteAccount(accountNo);
+        ledgerService.deleteAccount(account);
 
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .statusCode(HttpStatus.OK)
@@ -60,23 +63,60 @@ public class LedgerApi {
     }
 
 
-    @Get(ACCOUNT_PATH)
+    @Get(ACCOUNT + BALANCE)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get account balance")
-    public HttpResponse<ApiResponse<BigDecimal>> getAccountBalance(@QueryValue String accountNo) {
+    public HttpResponse<ApiResponse<BigDecimal>> getAccountBalance(@PathVariable String account) {
 
-        final var balance = ledgerService.getAccountBalance(accountNo);
+        final var balance = ledgerService.getAccountBalance(account);
 
         ApiResponse<BigDecimal> response = ApiResponse.<BigDecimal>builder()
                 .statusCode(HttpStatus.OK)
-                .message("Account successfully deleted")
+                .message("Account balance successfully retrieved")
                 .data(balance)
                 .build();
 
         return HttpResponse.ok(response);
-
     }
 
+
+    @Post(ACCOUNT + DEPOSIT)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Deposit money into account")
+    public HttpResponse<ApiResponse<Transaction>> deposit(
+            @PathVariable String account,
+            @QueryValue BigDecimal amount,
+            @QueryValue Currency currency) {
+
+        final var transaction = ledgerService.depositIntoAccount(account, amount, currency);
+
+        ApiResponse<Transaction> response = ApiResponse.<Transaction>builder()
+                .statusCode(HttpStatus.OK)
+                .message("Deposit successful")
+                .data(transaction)
+                .build();
+
+        return HttpResponse.ok(response);
+    }
+
+
+    @Post(ACCOUNT + WITHDRAWAL)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Withdraw money from account")
+    public HttpResponse<ApiResponse<Transaction>> withdrawal(
+            @PathVariable String account,
+            @QueryValue BigDecimal amount) {
+
+        final var transaction = ledgerService.withdrawFromAccount(account, amount);
+
+        ApiResponse<Transaction> response = ApiResponse.<Transaction>builder()
+                .statusCode(HttpStatus.OK)
+                .message("Withdrawal successful")
+                .data(transaction)
+                .build();
+
+        return HttpResponse.ok(response);
+    }
 
 
 
