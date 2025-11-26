@@ -80,6 +80,12 @@ public class LedgerService {
                 .build();
     }
 
+    // Get account transaction history
+    public List<Transaction> getTransactionHistory(String accountNo) {
+        final var account = getAccountFromRepo(accountNo);
+        return account.getTransactions();
+    }
+
     // Deposit money into Account (in different ccys)
     // - accounts should exist
     // - convert amount into Account ccy

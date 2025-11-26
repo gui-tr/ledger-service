@@ -25,6 +25,7 @@ public class LedgerApi {
     static final String BASE_URL = "/ledger";
     static final String ACCOUNT = "/{account}";
     static final String BALANCE = "/balance";
+    static final String TRANSACTIONS = "/transactions";
     static final String DEPOSIT = "/deposit";
     static final String WITHDRAWAL = "/withdrawal";
     static final String TRANSFER = "/transfer";
@@ -85,6 +86,25 @@ public class LedgerApi {
 
         return HttpResponse.ok(response);
     }
+
+    // get account transaction history
+    @Get(ACCOUNT + TRANSACTIONS)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Get account transactions history")
+    public HttpResponse<ApiResponse<List<Transaction>>> getTransactionHistory(@PathVariable String account) {
+
+        final var transactions = ledgerService.getTransactionHistory(account);
+
+        ApiResponse<List<Transaction>> response =
+                ApiResponse.<List<Transaction>>builder()
+                        .statusCode(HttpStatus.OK)
+                        .message("Transaction history successfully retrieved")
+                        .data(transactions)
+                        .build();
+
+        return HttpResponse.ok(response);
+    }
+
 
     @Get
     @Produces(MediaType.APPLICATION_JSON)
