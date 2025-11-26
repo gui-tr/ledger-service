@@ -145,7 +145,7 @@ public class LedgerApi {
     }
 
 
-    @Post(ACCOUNT + TRANSFER)
+    @Post(TRANSFER)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Transfer money between accounts")
     public HttpResponse<ApiResponse<List<Transaction>>> transfer(
