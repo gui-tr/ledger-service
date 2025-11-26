@@ -145,7 +145,7 @@ public class LedgerService {
         final var transactionFrom = Transaction.builder()
                 .accountNo(fromAccount.getAccountNo())
                 .type(Type.TRANSFER_OUT)
-                .amount(amount)
+                .amount(amount.negate())
                 .currency(fromAccount.getBaseCcy())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -160,7 +160,7 @@ public class LedgerService {
                 .currency(fromAccount.getBaseCcy())
                 .timestamp(LocalDateTime.now())
                 .build();
-        fromAccount.getTransactions().add(transactionTo);
+        toAccount.getTransactions().add(transactionTo);
 
         return List.of(transactionFrom, transactionTo);
     }
