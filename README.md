@@ -14,7 +14,7 @@ A small application that exposes a simple ledger API. Built with Micronaut.
 ### 2️⃣ Get the code
 ```bash
 git clone https://github.com/gui-tr/ledger-service.git
-cd ledger-service
+cd ledger_v1
 ```
 
 ### 3️⃣ Build & run the app 🚀
