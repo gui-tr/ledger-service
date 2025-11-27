@@ -22,7 +22,7 @@ cd ledger-service
 # Build the project 
 ./gradlew build
 
-# Run in development mode 
+# Run the app
 ./gradlew run
 ```
 
@@ -34,7 +34,7 @@ cd ledger-service
 | **GET**    | `/ledger/accounts`                              | Get all accounts and their balances         |
 | **POST**   | `/ledger/accounts`                              | Open a new account                          |
 | **DELETE** | `/ledger/accounts/{account}`                    | Delete an existing account                  |
-| **GET**    | `/ledger/accounts/{account}/balance`            | Retrieve the balance of a specific account  |
+| **GET**    | `/ledger/accounts/{account}/balance`            | Retrieve the balance of an account          |
 | **POST**   | `/ledger/accounts/{account}/deposit`            | Deposit money into an account               |
 | **GET**    | `/ledger/accounts/{account}/transactions`       | Get transaction history for an account      |
 | **POST**   | `/ledger/accounts/{account}/withdrawal`         | Withdraw money from an account              |
@@ -48,7 +48,7 @@ Go to `http://localhost:8080/swagger-ui`
 
 ### Option 2: Use curl commands
 ```bash
-# Open new account (specify the base currency you want)
+# Open new account
 curl -X POST "http://localhost:8080/ledger/accounts?baseCcy=USD"
 
 # Delete an account
