@@ -55,22 +55,22 @@ curl -X POST "http://localhost:8080/ledger/accounts?baseCcy=USD"
 curl -X DELETE "http://localhost:8080/ledger/accounts/{account}"
 
 # Get account balance
-curl -s "http://localhost:8080/ledger/accounts/{account}/balance" | jq
+curl -s "http://localhost:8080/ledger/accounts/{account}/balance"
 
 # Get account transactions history
-curl -s "http://localhost:8080/ledger/accounts/{account}/transactions" | jq
+curl -s "http://localhost:8080/ledger/accounts/{account}/transactions"
 
 # Get all accounts and their balances
-curl -s "http://localhost:8080/ledger/accounts" | jq
+curl -s "http://localhost:8080/ledger/accounts"
 
 # Deposit money into account
-curl -X POST "http://localhost:8080/ledger/accounts/{account}/deposit?amount=100.00&currency=USD" | jq
+curl -X POST "http://localhost:8080/ledger/accounts/{account}/deposit?amount=100.00&currency=USD"
 
 # Withdraw money from account
-curl -X POST "http://localhost:8080/ledger/accounts/{account}/withdrawal?amount=50.00" | jq
+curl -X POST "http://localhost:8080/ledger/accounts/{account}/withdrawal?amount=50.00"
 
 # Transfer money between accounts
-curl -X POST "http://localhost:8080/ledger/transfer?fromAccount={account}&toAccount={otherAccount}&amount=25.00" | jq
+curl -X POST "http://localhost:8080/ledger/transfer?fromAccount={account}&toAccount={otherAccount}&amount=25.00"
 ```
 
 
