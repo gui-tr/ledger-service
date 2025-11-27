@@ -32,6 +32,8 @@ dependencies {
     testImplementation("io.micronaut:micronaut-http-client")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.micronaut.test:micronaut-test-rest-assured")
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
 }
 
 
