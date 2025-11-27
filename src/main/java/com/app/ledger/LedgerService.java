@@ -3,7 +3,7 @@ package com.app.ledger;
 import com.app.account.Account;
 import com.app.account.AccountBalance;
 import com.app.account.AccountRepository;
-import com.app.exception.LedgerExceptions;
+import com.app.ledger.exception.LedgerExceptions;
 import com.app.transaction.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -24,7 +24,7 @@ public class LedgerService {
     AccountRepository accountRepository;
 
 
-    // Create a new Account (in different ccys)
+    // Open a new account
     public Account openNewAccount(Currency baseCcy) {
         return accountRepository.insert(Account.builder()
                         .accountNo(generateAccountId())
@@ -32,7 +32,7 @@ public class LedgerService {
                         .build());
     }
 
-    // Get all accounts with their balances
+    // Get all accounts and their balances
     public List<AccountBalance> getAllAccounts() {
 
         final var accountList = accountRepository.findAll();
@@ -55,8 +55,7 @@ public class LedgerService {
 
 
 
-    // Delete an Account
-    // - cannot delete an account if balance is positive
+    // Delete an account
     public boolean deleteAccount(String accountNo) {
         final var account = getAccountFromRepo(accountNo);
 
@@ -68,8 +67,6 @@ public class LedgerService {
     }
 
     // Get account balance
-    // - accounts should exist
-    // - should be sum of all transactions
     public AccountBalance getAccountBalance(String accountNo) {
         final var account = getAccountFromRepo(accountNo);
 
@@ -86,13 +83,10 @@ public class LedgerService {
         return account.getTransactions();
     }
 
-    // Deposit money into Account (in different ccys)
-    // - accounts should exist
-    // - convert amount into Account ccy
+    // Deposit money into an account
     public Transaction depositIntoAccount(String accountNo, BigDecimal amount, Currency currency) {
 
         final var account = getAccountFromRepo(accountNo);
-
         final var convertedAmount = convert(currency, account.getBaseCcy(), amount);
 
         final var transaction = Transaction.builder()
@@ -108,9 +102,6 @@ public class LedgerService {
     }
 
     // Withdraw money from Account
-    // - accounts should exist
-    // - withdraw only in Account ccy
-    // - withdraw only possible if funds available (no overdraft possible)
     public Transaction withdrawFromAccount(String accountNo, BigDecimal amount) {
 
         final var account = getAccountFromRepo(accountNo);
@@ -131,14 +122,8 @@ public class LedgerService {
         return transaction;
     }
 
-
-
-    // Transfer money from an Account to Another
-    // - both accounts should exist
-    // - transfer is possible only if funds available
-    // - transfers are done from base ccy to base ccy
+    // Transfer money between accounts
     public List<Transaction> transferMoney(String fromAccountNo, String toAccountNo, BigDecimal amount) {
-
         // get accounts
         final var fromAccount = getAccountFromRepo(fromAccountNo);
         final var toAccount = getAccountFromRepo(toAccountNo);
@@ -166,8 +151,8 @@ public class LedgerService {
                 .currency(fromAccount.getBaseCcy())
                 .timestamp(LocalDateTime.now())
                 .build();
-        toAccount.getTransactions().add(transactionTo);
 
+        toAccount.getTransactions().add(transactionTo);
         return List.of(transactionFrom, transactionTo);
     }
 

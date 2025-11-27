@@ -18,10 +18,6 @@ public class AccountRepository {
         return account;
     }
 
-    public Optional<Account> findById(String id) {
-        return Optional.ofNullable(map.get(id));
-    }
-
     public List<Account> findAll() {
         return new ArrayList<>(map.values());
     }

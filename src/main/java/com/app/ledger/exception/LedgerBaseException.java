@@ -1,4 +1,4 @@
-package com.app.exception;
+package com.app.ledger.exception;
 
 import io.micronaut.http.HttpStatus;
 import lombok.Getter;

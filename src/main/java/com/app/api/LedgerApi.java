@@ -2,7 +2,7 @@ package com.app.api;
 
 import com.app.account.Account;
 import com.app.account.AccountBalance;
-import com.app.exception.LedgerBaseException;
+import com.app.ledger.exception.LedgerBaseException;
 import com.app.ledger.LedgerService;
 import com.app.transaction.Currency;
 import com.app.transaction.Transaction;
