@@ -45,7 +45,7 @@ public class LedgerService {
         accountList.forEach(account -> {
             accountBalanceList.add(AccountBalance.builder()
                     .accountNo(account.getAccountNo())
-                    .baseCurrency(account.getBaseCcy())
+                    .baseCcy(account.getBaseCcy())
                     .balance(getBalance(account.getTransactions()))
                     .build());
         });
@@ -75,7 +75,7 @@ public class LedgerService {
 
         return AccountBalance.builder()
                 .accountNo(accountNo)
-                .baseCurrency(account.getBaseCcy())
+                .baseCcy(account.getBaseCcy())
                 .balance(getBalance(account.getTransactions()))
                 .build();
     }

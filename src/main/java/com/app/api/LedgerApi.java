@@ -23,18 +23,19 @@ import static com.app.api.LedgerApi.BASE_URL;
 public class LedgerApi {
 
     static final String BASE_URL = "/ledger";
-    static final String ACCOUNT = "/{account}";
-    static final String BALANCE = "/balance";
-    static final String TRANSACTIONS = "/transactions";
-    static final String DEPOSIT = "/deposit";
-    static final String WITHDRAWAL = "/withdrawal";
+    static final String ACCOUNTS = "/accounts";
+    static final String ACCOUNT = ACCOUNTS + "/{account}";
+    static final String BALANCE = ACCOUNT + "/balance";
+    static final String TRANSACTIONS = ACCOUNT + "/transactions";
+    static final String DEPOSIT = ACCOUNT + "/deposit";
+    static final String WITHDRAWAL = ACCOUNT + "/withdrawal";
     static final String TRANSFER = "/transfer";
 
     @Inject
     LedgerService ledgerService;
 
 
-    @Post()
+    @Post(ACCOUNTS)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Open new account")
     public HttpResponse<ApiResponse<Account>> openNewAccount(@QueryValue Currency baseCcy) {
@@ -70,7 +71,7 @@ public class LedgerApi {
     }
 
 
-    @Get(ACCOUNT + BALANCE)
+    @Get(BALANCE)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get account balance")
     public HttpResponse<ApiResponse<AccountBalance>> getAccountBalance(@PathVariable String account) {
@@ -88,7 +89,7 @@ public class LedgerApi {
     }
 
     // get account transaction history
-    @Get(ACCOUNT + TRANSACTIONS)
+    @Get(TRANSACTIONS)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get account transactions history")
     public HttpResponse<ApiResponse<List<Transaction>>> getTransactionHistory(@PathVariable String account) {
@@ -106,7 +107,7 @@ public class LedgerApi {
     }
 
 
-    @Get
+    @Get(ACCOUNTS)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get all accounts and their balances")
     public HttpResponse<ApiResponse<List<AccountBalance>>> getAllAccountBalances() {
@@ -124,7 +125,7 @@ public class LedgerApi {
     }
 
 
-    @Post(ACCOUNT + DEPOSIT)
+    @Post(DEPOSIT)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Deposit money into account")
     public HttpResponse<ApiResponse<Transaction>> deposit(
@@ -145,7 +146,7 @@ public class LedgerApi {
     }
 
 
-    @Post(ACCOUNT + WITHDRAWAL)
+    @Post(WITHDRAWAL)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Withdraw money from account")
     public HttpResponse<ApiResponse<Transaction>> withdrawal(

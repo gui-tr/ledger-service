@@ -16,6 +16,6 @@ import java.math.BigDecimal;
 @Serdeable
 public class AccountBalance {
     private String accountNo;
-    private Currency baseCurrency;
+    private Currency baseCcy;
     private BigDecimal balance;
 }

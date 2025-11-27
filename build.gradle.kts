@@ -31,6 +31,7 @@ dependencies {
 
     testImplementation("io.micronaut:micronaut-http-client")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("io.micronaut.test:micronaut-test-rest-assured")
 }
 
 
