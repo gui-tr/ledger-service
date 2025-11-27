@@ -41,6 +41,12 @@ cd ledger-service
 | **POST**   | `/ledger/transfer`                              | Transfer money between two accounts         |
 
 
+**Assumptions:**
+* A user cannot delete an account that has a positive balance.
+* A user can have multiple accounts in different currencies.
+* A user can deposit or withdraw money in any currency (fx conversion handled by the app).
+* Accounts cannot be overdrawn.
+
 ## Execute features 🤖
 
 ### Option 1: Access swagger API docs (recommended)
