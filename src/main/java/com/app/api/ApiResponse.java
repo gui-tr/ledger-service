@@ -1,6 +1,6 @@
 package com.app.api;
 
-import io.micronaut.http.HttpStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,8 @@ import lombok.Data;
 @Builder
 @Serdeable
 public class ApiResponse<T> {
-    private HttpStatus statusCode;
+    private int statusCode;
     private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 }
