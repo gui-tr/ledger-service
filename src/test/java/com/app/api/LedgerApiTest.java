@@ -1,6 +1,6 @@
 package com.app.api;
 
-import com.app.account.AccountBalance;
+import com.app.api.dto.AccountBalance;
 import com.app.ledger.LedgerService;
 import com.app.transaction.Currency;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -33,7 +33,7 @@ class LedgerApiTest {
             .post("/ledger/accounts")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Account successfully created"))
             .body("data.baseCcy", equalTo("GBP"))
             .body("data.accountNo", notNullValue());
@@ -68,7 +68,7 @@ class LedgerApiTest {
             .get("/ledger/accounts/{account}/balance")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Account balance successfully retrieved"))
             .body("data.baseCcy", equalTo(result.getBaseCcy().toString()))
             .body("data.accountNo", equalTo(result.getAccountNo()));
@@ -91,7 +91,7 @@ class LedgerApiTest {
             .get("/ledger/accounts/{account}/transactions")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Transaction history successfully retrieved"))
             .body("data", hasSize(2));
     }
@@ -130,7 +130,7 @@ class LedgerApiTest {
             .get("/ledger/accounts/")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .extract()
             .jsonPath()
             .getList("data", AccountBalance.class);
@@ -156,7 +156,7 @@ class LedgerApiTest {
             .post("/ledger/accounts/{account}/deposit")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Deposit successful"));
 
         // control value in repo
@@ -183,7 +183,7 @@ class LedgerApiTest {
             .post("/ledger/accounts/{account}/withdrawal")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Withdrawal successful"));
 
         final var balanceAfterWithdrawal = ledgerService.getAccountBalance(account.getAccountNo()).getBalance();
@@ -210,7 +210,7 @@ class LedgerApiTest {
             .post("/ledger/transfer")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("statusCode", equalTo("OK"))
+            .body("statusCode", equalTo(200))
             .body("message", equalTo("Transfer successful"))
             .body("data", hasSize(2));
 

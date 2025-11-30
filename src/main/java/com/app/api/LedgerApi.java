@@ -1,11 +1,10 @@
 package com.app.api;
 
-import com.app.account.Account;
-import com.app.account.AccountBalance;
+import com.app.api.dto.AccountBalance;
+import com.app.api.dto.TransactionDTO;
 import com.app.ledger.exception.LedgerBaseException;
 import com.app.ledger.LedgerService;
 import com.app.transaction.Currency;
-import com.app.transaction.Transaction;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -38,13 +37,13 @@ public class LedgerApi {
     @Post(ACCOUNTS)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Open new account")
-    public HttpResponse<ApiResponse<Account>> openNewAccount(@QueryValue Currency baseCcy) {
+    public HttpResponse<ApiResponse<AccountBalance>> openNewAccount(@QueryValue Currency baseCcy) {
 
         final var account = ledgerService.openNewAccount(baseCcy);
 
-        ApiResponse<Account> response =
-                ApiResponse.<Account>builder()
-                .statusCode(HttpStatus.OK)
+        ApiResponse<AccountBalance> response =
+                ApiResponse.<AccountBalance>builder()
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Account successfully created")
                 .data(account)
                 .build();
@@ -62,7 +61,7 @@ public class LedgerApi {
 
         ApiResponse<Void> response =
                 ApiResponse.<Void>builder()
-                .statusCode(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Account successfully deleted")
                 .data(null)
                 .build();
@@ -80,7 +79,7 @@ public class LedgerApi {
 
         ApiResponse<AccountBalance> response =
                 ApiResponse.<AccountBalance>builder()
-                .statusCode(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Account balance successfully retrieved")
                 .data(accountBalance)
                 .build();
@@ -88,17 +87,17 @@ public class LedgerApi {
         return HttpResponse.ok(response);
     }
 
-    // get account transaction history
+
     @Get(TRANSACTIONS)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get account transactions history")
-    public HttpResponse<ApiResponse<List<Transaction>>> getTransactionHistory(@PathVariable String account) {
+    public HttpResponse<ApiResponse<List<TransactionDTO>>> getTransactionHistory(@PathVariable String account) {
 
         final var transactions = ledgerService.getTransactionHistory(account);
 
-        ApiResponse<List<Transaction>> response =
-                ApiResponse.<List<Transaction>>builder()
-                        .statusCode(HttpStatus.OK)
+        ApiResponse<List<TransactionDTO>> response =
+                ApiResponse.<List<TransactionDTO>>builder()
+                        .statusCode(HttpStatus.OK.getCode())
                         .message("Transaction history successfully retrieved")
                         .data(transactions)
                         .build();
@@ -116,7 +115,7 @@ public class LedgerApi {
 
         ApiResponse<List<AccountBalance>> response =
                 ApiResponse.<List<AccountBalance>>builder()
-                        .statusCode(HttpStatus.OK)
+                        .statusCode(HttpStatus.OK.getCode())
                         .message("Accounts successfully retrieved")
                         .data(accountBalances)
                         .build();
@@ -128,16 +127,16 @@ public class LedgerApi {
     @Post(DEPOSIT)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Deposit money into account")
-    public HttpResponse<ApiResponse<Transaction>> deposit(
+    public HttpResponse<ApiResponse<TransactionDTO>> deposit(
             @PathVariable String account,
             @QueryValue BigDecimal amount,
             @QueryValue Currency currency) {
 
         final var transaction = ledgerService.depositIntoAccount(account, amount, currency);
 
-        ApiResponse<Transaction> response =
-                ApiResponse.<Transaction>builder()
-                .statusCode(HttpStatus.OK)
+        ApiResponse<TransactionDTO> response =
+                ApiResponse.<TransactionDTO>builder()
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Deposit successful")
                 .data(transaction)
                 .build();
@@ -149,15 +148,15 @@ public class LedgerApi {
     @Post(WITHDRAWAL)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Withdraw money from account")
-    public HttpResponse<ApiResponse<Transaction>> withdrawal(
+    public HttpResponse<ApiResponse<TransactionDTO>> withdrawal(
             @PathVariable String account,
             @QueryValue BigDecimal amount) {
 
         final var transaction = ledgerService.withdrawFromAccount(account, amount);
 
-        ApiResponse<Transaction> response =
-                ApiResponse.<Transaction>builder()
-                .statusCode(HttpStatus.OK)
+        ApiResponse<TransactionDTO> response =
+                ApiResponse.<TransactionDTO>builder()
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Withdrawal successful")
                 .data(transaction)
                 .build();
@@ -169,16 +168,16 @@ public class LedgerApi {
     @Post(TRANSFER)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Transfer money between accounts")
-    public HttpResponse<ApiResponse<List<Transaction>>> transfer(
+    public HttpResponse<ApiResponse<List<TransactionDTO>>> transfer(
             @QueryValue String fromAccount,
             @QueryValue String toAccount,
             @QueryValue BigDecimal amount) {
 
         final var transactions = ledgerService.transferMoney(fromAccount, toAccount, amount);
 
-        ApiResponse<List<Transaction>> response =
-                ApiResponse.<List<Transaction>>builder()
-                .statusCode(HttpStatus.OK)
+        ApiResponse<List<TransactionDTO>> response =
+                ApiResponse.<List<TransactionDTO>>builder()
+                .statusCode(HttpStatus.OK.getCode())
                 .message("Transfer successful")
                 .data(transactions)
                 .build();
@@ -187,16 +186,14 @@ public class LedgerApi {
     }
 
 
-
     // Global ledger exception handler
     @Error(global = true, exception = LedgerBaseException.class)
     public HttpResponse<ApiResponse<Void>> handleLedgerException(LedgerBaseException ex) {
         ApiResponse<Void> response = ApiResponse.<Void>builder()
-                .statusCode(ex.getStatus())
+                .statusCode(ex.getStatus().getCode())
                 .message(ex.getMessage())
                 .build();
 
         return HttpResponse.status(ex.getStatus()).body(response);
     }
-
 }
