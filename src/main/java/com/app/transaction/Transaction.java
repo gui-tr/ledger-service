@@ -1,6 +1,5 @@
 package com.app.transaction;
 
-import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Serdeable
 public class Transaction {
     private String id;
     private String accountNo;
