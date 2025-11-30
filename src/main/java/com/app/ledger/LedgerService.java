@@ -1,8 +1,10 @@
 package com.app.ledger;
 
 import com.app.account.Account;
-import com.app.account.AccountBalance;
+import com.app.api.dto.AccountBalance;
 import com.app.account.AccountRepository;
+import com.app.api.dto.TransactionDTO;
+import com.app.api.mapper.TransactionMapper;
 import com.app.ledger.exception.LedgerExceptions;
 import com.app.transaction.*;
 import jakarta.inject.Inject;
@@ -25,11 +27,17 @@ public class LedgerService {
 
 
     // Open a new account
-    public Account openNewAccount(Currency baseCcy) {
-        return accountRepository.insert(Account.builder()
+    public AccountBalance openNewAccount(Currency baseCcy) {
+        final var account = accountRepository.insert(Account.builder()
                         .accountNo(generateAccountId())
                         .baseCcy(baseCcy)
                         .build());
+
+        return AccountBalance.builder()
+                .accountNo(account.getAccountNo())
+                .baseCcy(account.getBaseCcy())
+                .balance(getBalance(account.getTransactions()))
+                .build();
     }
 
     // Get all accounts and their balances
@@ -52,8 +60,6 @@ public class LedgerService {
 
         return accountBalanceList;
     }
-
-
 
     // Delete an account
     public boolean deleteAccount(String accountNo) {
@@ -78,13 +84,15 @@ public class LedgerService {
     }
 
     // Get account transaction history
-    public List<Transaction> getTransactionHistory(String accountNo) {
+    public List<TransactionDTO> getTransactionHistory(String accountNo) {
         final var account = getAccountFromRepo(accountNo);
-        return account.getTransactions();
+        return account.getTransactions().stream()
+                .map(TransactionMapper::toDTO)
+                .toList();
     }
 
     // Deposit money into an account
-    public Transaction depositIntoAccount(String accountNo, BigDecimal amount, Currency currency) {
+    public TransactionDTO depositIntoAccount(String accountNo, BigDecimal amount, Currency currency) {
 
         final var account = getAccountFromRepo(accountNo);
         final var convertedAmount = convert(currency, account.getBaseCcy(), amount);
@@ -98,11 +106,11 @@ public class LedgerService {
                 .build();
 
         account.getTransactions().add(transaction);
-        return transaction;
+        return TransactionMapper.toDTO(transaction);
     }
 
     // Withdraw money from Account
-    public Transaction withdrawFromAccount(String accountNo, BigDecimal amount) {
+    public TransactionDTO withdrawFromAccount(String accountNo, BigDecimal amount) {
 
         final var account = getAccountFromRepo(accountNo);
 
@@ -119,11 +127,11 @@ public class LedgerService {
                 .build();
 
         account.getTransactions().add(transaction);
-        return transaction;
+        return TransactionMapper.toDTO(transaction);
     }
 
     // Transfer money between accounts
-    public List<Transaction> transferMoney(String fromAccountNo, String toAccountNo, BigDecimal amount) {
+    public List<TransactionDTO> transferMoney(String fromAccountNo, String toAccountNo, BigDecimal amount) {
         // get accounts
         final var fromAccount = getAccountFromRepo(fromAccountNo);
         final var toAccount = getAccountFromRepo(toAccountNo);
@@ -153,7 +161,10 @@ public class LedgerService {
                 .build();
 
         toAccount.getTransactions().add(transactionTo);
-        return List.of(transactionFrom, transactionTo);
+        return List.of(
+                TransactionMapper.toDTO(transactionFrom),
+                TransactionMapper.toDTO(transactionTo)
+        );
     }
 
 
@@ -163,5 +174,4 @@ public class LedgerService {
                 .findFirst()
                 .orElseThrow(() -> new LedgerExceptions.AccountNotFoundException(accountNo));
     }
-
 }
