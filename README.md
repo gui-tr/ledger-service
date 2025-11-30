@@ -94,7 +94,7 @@ curl -X POST "http://localhost:8080/ledger/transfer?fromAccount={account}&toAcco
 - [Shadow Gradle Plugin](https://gradleup.com/shadow/)
 - [Micronaut Gradle Plugin documentation](https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/)
 - [GraalVM Gradle Plugin documentation](https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
-  
+
 ### Feature serialization-jackson documentation
 - [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
 
